@@ -10,6 +10,9 @@
 
 from file_define import FileReader, TextFileReader, JsonFileReader
 from data_define import Student
+from pyecharts.charts import Bar          # 构建柱状图
+from pyecharts.options import *           # 配置项
+from pyecharts.globals import ThemeType   # 主题类型
 
 text_file_reader = TextFileReader("students.csv")
 json_file_reader = JsonFileReader("students.jsonl")
@@ -28,4 +31,11 @@ for student in all_students:
     if student.total > 500:
         students_dict[student.class_] += 1
 
-print(students_dict)
+# 可视化图开发
+bar = Bar(init_opts = InitOpts(theme = ThemeType.LIGHT))
+
+bar.add_xaxis(list(students_dict.keys()))    # 添加x轴数据
+bar.add_yaxis("总分大于500的人数", list(students_dict.values()))    # 添加y轴数据
+bar.set_global_opts(title_opts = TitleOpts(title = "各班总分大于500的人数"))    # 设置标题
+
+bar.render("各班总分大于500的人数柱状图.html")
